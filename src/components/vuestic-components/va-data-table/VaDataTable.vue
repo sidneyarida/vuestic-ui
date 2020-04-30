@@ -102,12 +102,11 @@ export default {
         return this.currentPage
       },
       set (page) {
-        if (this.apiMode) {
-          this.$emit('page-selected', page)
+        this.$emit('page-selected', page)
+        if (this.apiMode) {          
           return
         }        
         this.$refs.vuetable.changePage(page)
-        this.currentPage = page;
       },
     },
     styles () {
