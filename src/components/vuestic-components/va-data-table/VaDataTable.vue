@@ -94,18 +94,23 @@ export default {
   },
   data () {
     return {
+      page: 1,
     }
   },
   computed: {
     currentPageProxy: {
       get () {
-        return this.currentPage
+        if (this.apiMode) {
+          return this.currentPage;
+        }
+        return this.page;
       },
-      set (page) {
-        this.$emit('page-selected', page)
-        if (this.apiMode) {          
+      set (page) {      
+        if (this.apiMode) {
+          this.$emit('page-selected', page)
           return
-        }        
+        }
+        this.page = page;
         this.$refs.vuetable.changePage(page)
       },
     },
