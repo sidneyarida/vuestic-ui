@@ -11,6 +11,7 @@
         :success="success"
         :messages="messages"
         :error-messages="errorMessages"
+        :removable="removable"
       >
         <template slot="append">
           <va-icon color="gray" name="fa fa-calendar"/>
@@ -63,6 +64,9 @@ export default {
       type: Boolean,
     },
     success: {
+      type: Boolean,
+    },
+    removable: {
       type: Boolean,
     },
     messages: {
