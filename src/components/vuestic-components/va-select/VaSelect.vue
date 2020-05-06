@@ -45,7 +45,14 @@
     <div
       class="va-select__option-list no-options"
       :style="optionsListStyle"
-      v-if="!filteredOptions.length"
+      v-if="showMinSearch"
+    >
+      {{minSearchText}}
+    </div>
+    <div
+      class="va-select__option-list no-options"
+      :style="optionsListStyle"
+      v-else-if="!filteredOptions.length"
     >
       {{noOptionsText}}
     </div>
@@ -135,11 +142,20 @@ export default {
       type: Number,
       default: 5,
     },
+    minSearch: {
+      type: Number,
+      default: 3,
+    },
     searchable: Boolean,
     multiple: Boolean,
     disabled: Boolean,
     readonly: Boolean,
     loading: Boolean,
+    apiMode: Boolean,
+    hideDropdownOnselect: {
+      type: Boolean,
+      default: true,
+    },
     width: {
       type: String,
       default: '100%',
@@ -163,6 +179,10 @@ export default {
       type: String,
       default: 'Items not found',
     },
+    minSearchText: {
+      type: String,
+      default: 'Insert atleast 3 characters',
+    },
     fixed: {
       type: Boolean,
       default: true,
@@ -172,7 +192,10 @@ export default {
     success: Boolean,
   },
   watch: {
-    search (val) {
+    search (val) {      
+      if (this.apiMode && this.showMinSearch) {
+        return
+      }
       this.$emit('update-search', val)
     },
     visible (val) {
@@ -227,7 +250,7 @@ export default {
     selectedOption () {
       return (!this.valueProxy || this.multiple) ? null : this.options.find(option => this.compareOptions(option, this.valueProxy)) || null
     },
-    filteredOptions () {
+    filteredOptions () {      
       if (!this.search) {
         return this.options
       }
@@ -237,6 +260,12 @@ export default {
         const search = this.search.toUpperCase()
         return optionText.includes(search)
       })
+    },
+    showMinSearch () {
+      if (this.apiMode && this.search.length < this.minSearch) {
+        return true;
+      }
+      return false;
     },
     showClearIcon () {
       if (this.noClear) {
@@ -264,6 +293,9 @@ export default {
       },
       set (value) {
         this.$emit('input', value)
+        if (this.hideDropdownOnselect) {
+          this.$refs.dropdown.hide()
+        }
       },
     },
   },
