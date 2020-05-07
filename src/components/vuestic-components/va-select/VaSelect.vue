@@ -262,7 +262,7 @@ export default {
       })
     },
     showMinSearch () {
-      if (this.apiMode && this.search.length < this.minSearch) {
+      if (this.apiMode && this.search.length < this.minSearch && this.options.length === 0) {
         return true;
       }
       return false;
